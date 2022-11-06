@@ -15,7 +15,16 @@ class Controller
     private array $postData;
     private static array $configuration = [];
     private Database $database;
+    private View $view;
+    private array $request;
+    public function __construct(array $request)
 
+    {
+        $this->request = $request;
+        $this->view = new View()
+        $this->database = new Database(self::$configuartor);
+    }
+ 
     public function __construct(array $getData, array $postData)
     {
         $this->getData = $getData;
@@ -35,18 +44,20 @@ class Controller
 
         $viewParams = [];
 
-        switch ($action) {
+        switch ($this->$action()) {
             case 'create':
                 $page = 'create';
                 $created = false;
-                if (!empty($this->postData)) {
-                    $viewParams = [
-                        'title' => $this->postData['title'],
-                        'description' => $this->postData['description'],
-                    ];
-                    header('Location: /');
+                $data = $this->getRequestPost();
+                if (!empty($data)) {
                     $created = true;
+                    $viewParams = [
+                        'title' => $data['title'],
+                        'description' => $data['description'],
+                    ];
+                    
                     $this->database->createNote($viewParams);
+                    header('Location: /');
                 }
                 $viewParams['created'] = $created;
                 break;
@@ -54,7 +65,22 @@ class Controller
                 $page = 'list';
                 $viewParams['resultList'] = 'Wyświetlamy listę notatek';
                 break;
+
+                break;
         }
-        $view->render($page, $viewParams);
+        $this->view->render($page, $viewParams);
+    }
+    private function action(): string
+    {
+        $data = $this->getRequestGet();
+        return $data['action'] ?? self::DEFAULT_ACTION;
+    }
+    private function getRequestPost(): array
+    {
+        return $this->request['post'] ?? [];
+    }
+    private function getRequestGet(): array
+    {
+        return $this->request['get'] ?? [];
     }
 }
