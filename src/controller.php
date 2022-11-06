@@ -14,14 +14,14 @@ class Controller
     private array $getData;
     private array $postData;
     private static array $configuration = [];
+    private Database $database;
 
     public function __construct(array $getData, array $postData)
     {
         $this->getData = $getData;
         $this->postData = $postData;
-        $db = new Database(self::$configuration);
+        $this->database = new Database(self::$configuration);
     }
-
     public static function initConfiguration(array $configuration): void
     {
         self::$configuration = $configuration;
@@ -44,7 +44,9 @@ class Controller
                         'title' => $this->postData['title'],
                         'description' => $this->postData['description'],
                     ];
+                    header('Location: /');
                     $created = true;
+                    $this->database->createNote($viewParams);
                 }
                 $viewParams['created'] = $created;
                 break;
