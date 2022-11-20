@@ -33,6 +33,6 @@ try {
     echo "<h1>Wystąpił błąd w aplikacji</h1>";
     echo '<h3>' . $e-> getMassage() . '</h3>';
 }  catch (Throwable $e) {
-    echo "<h1>Wystąpił błąd w aplikacji</h1>";]
+    echo "<h1>Wystąpił błąd w aplikacji</h1>";
     dump($e);
 }

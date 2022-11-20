@@ -40,8 +40,8 @@ class Controller
 
                 if ($this->request->hasPost()) {
                     $noteData = [
-                        'title' => $this->request->postParam['title'],
-                        'description' => $this->request->postParam['description'],
+                        'title' => $this->request->postParam('title'),
+                        'description' => $this->request->postParam('description'),
                     ];
 
                     $this->database->createNote($noteData);
@@ -85,15 +85,5 @@ class Controller
     private function action(): string
     {
         return $this->request->getParam('action', self::DEFAULT_ACTION);
-    }
-
-    private function getRequestPost(): array
-    {
-        return $this->request['post'] ?? [];
-    }
-
-    private function getRequestGet(): array
-    {
-        return $this->request['get'] ?? [];
     }
 }
