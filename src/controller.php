@@ -31,56 +31,52 @@ class Controller
         self::$configuration = $configuration;
     }
 
-    public function run(): void
+    public function createAction()
     {
-
-        switch ($this->action()) {
-            case 'create':
-                $page = 'create';
-
-                if ($this->request->hasPost()) {
-                    $noteData = [
-                        'title' => $this->request->postParam('title'),
-                        'description' => $this->request->postParam('description'),
-                    ];
-
-                    $this->database->createNote($noteData);
-                    header('Location: /?before=created');
-                    exit;
-                }
-                break;
-
-            case 'show':
-                $page = 'show';
-                $noteId = (int) $this->request->getParam('id');
-
-                if (!$noteId) {
-                    header('Location: /?error=missingNoteId');
-                    exit;
-                }
-                try {
-                    $note = $this->database->getNote($noteId);
-                } catch (NotFoundException $e) {
-                    header('Location: /?error=noteNotFound');
-                    exit;
-                }
-                $viewParams = [
-                    'title' => 'Moja notatka',
-                    'description' => 'Opis',
-                    'note' => $note,
-                ];
-                break;
-            default:
-                $page = 'list';
-                $viewParams = [
-                    'notes' => $this->database->getNotes(),
-                    'before' => $this->request->getParam('before'),
-                    'error' => $this->request->getParam('error'),
-                ];
-                break;
+        if ($this->request->hasPost()) {
+            $noteData = [
+                'tilte' => $this->request->postParams('tilte'),
+                'description' => $this->request-postParams('description'),
+            ];
+            $this->database->createNote($noteData);
+            header('Location: /?before-created');
+            exit;
         }
-        $this->view->render($page, $viewParams ?? []);
-    }
+        public function showAction()
+        {
+            $noteId = $this->database->getNote($noteId);
+        } catch (NotFoundException $e) {
+            header('Location: /?error=noteNotFoound');
+            exit;
+        }
+        $viewParams = [
+            'title' => 'Moja notatka',
+            'description' => 'Opis',
+            'note' => $note,
+        ];
+        $this->view->render('show', ['note' => $note]);
+        }
+        public function listAction()
+        {
+            $viewParams = [
+                'notes' => $this->database->getNotes(),
+                'before' => $this->request->getParams('before'),
+                'error' => $this->request->getParams('error'),
+            ];
+            $this->view->render('list', [
+                'notes' => $this->database->getNotes(),
+                'before' => $this->request->getParam('before'),
+                'error' => $this->request->getParam('error'),
+            ]);
+        }
+        public function run(): void
+        {
+            $action = $this->action() . 'Action';
+            if (!method_exists($this, $action)) {
+                $action = self::DEFAULT_ACTION . 'Action';
+            }
+            $this->$action();
+        }
 
     private function action(): string
     {
