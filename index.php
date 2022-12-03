@@ -22,7 +22,7 @@ use App\Controller\AbstractController;
 use App\Controller\NoteController;
 use App\Request;
 
-$request = new Request($_GET, $_POST);
+$request = new Request($_GET, $_POST, $_SERVER);
 
 try {
     AbstractController::initConfiguration($configuration);
