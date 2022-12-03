@@ -77,6 +77,15 @@ class Database
         }
     }
 
+    public function deleteNote(int $id): void
+    {
+        try {
+            $query = "DELETE FROM notes WHERE id=$id LIMIT 1";
+            $this->conn->exec($query);
+        } catch (Throwable $e) {
+            throw new StorageException("Nie udało się utworzyć notatki", 400, $e);
+        }
+    }
 
     private function createConnection(array $config): void
     {
