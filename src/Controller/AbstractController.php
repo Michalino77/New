@@ -41,7 +41,7 @@ abstract class AbstractController
     {
         return $this->request->getParam('action', self::DEFAULT_ACTION);
     }
-    protected function redirect(string @to, array $params): void
+    protected function redirect(string $to, array $params): void
     {
         $location = $to;
         if (count($params)) {

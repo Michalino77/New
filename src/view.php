@@ -17,11 +17,11 @@ class View
     {
         $clearParams = [];
 
-        foreach ($params as $key => $params) {
+        foreach ($params as $key => $param) {
             if (is_array($param)) {
                 $clearParams[$key] = $this->escape($param);
             } else if ($param) {
-                $clearParams[$key] = htmlentitles($param);
+                $clearParams[$key] = htmlentities($param);
             }
         }
 
